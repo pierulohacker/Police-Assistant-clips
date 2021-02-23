@@ -1,0 +1,50 @@
+;;(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\codice progetto.clp")
+
+;descriviamo la tipologia di tracce che possono essere rinvenute
+(deftemplate traccia-papillare
+	(slot tipologia (allowed-symbols evidente latente) (default ?NONE))
+	(slot numero-reperto (default ?NONE)))
+	
+(deftemplate traccia-biologica
+	(slot tipologia (allowed-symbols liquida solida) (default ?NONE))
+	(slot nome (default "sostanza sconosciuta"))
+	(slot numero-reperto (default ?NONE)))
+	
+(deftemplate traccia-merceologica
+	(slot tipologia (default ?NONE))
+	(slot nome (default "oggetto sconosciuto"))
+	(multislot tracce)
+	(slot numero-reperto (default ?NONE)))
+;;////////////////////////////////////////////////////////////////////////
+;;funzione atta a forzare l'utente a digitare le risposte previste
+(deffunction monitora-si-no (?risposta)
+	(bind ?risposta (lowcase ?risposta))
+	(while (and(neq ?risposta si)(neq ?risposta no)) do 
+	(printout t "La risposta inserita non è valida, è possibile digitare 'si' o 'no': ")
+	(bind ?risposta (read)))
+	(return ?risposta))
+
+;(deffunction rimuovi-da-lista (?lista ?elemento)
+	;(printout t "Rimozione di " ?elemento "da " ?lista)
+	;(bind ?posizione (member$ ?elemento ?lista))
+	;(delete$ ?lista ?posizione ?posizione)
+	;(printout t "Rimozione effettuata"))
+	
+(defrule stato-iniziale
+	(not(indumenti))
+	(not(finito))
+	=>
+	(printout t "Benvenuto operatore!" crlf)
+	(load-facts "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\fatti iniziali.clp"))
+	
+;;è meglio spostarsi su un'altra regola per ritornare poi su questa
+(defrule chiedere-vestire
+	(finito no)
+	?indumenti<-(indumenti ?primo $?restanti)
+	=>
+	(printout t "Ha indossato " ?primo " ? (si/no): ")
+	(bind ?risposta (monitora-si-no (read)))
+	(assert (indumento-messo ?risposta))
+	(retract ?indumenti)
+	(if (eq ?risposta si) then (assert(indumenti $?restanti)) else (printout t "cosa sta aspettando?!") (assert (indumenti ?primo $?restanti))))
+	

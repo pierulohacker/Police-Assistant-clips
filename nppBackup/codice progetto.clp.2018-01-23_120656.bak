@@ -1,0 +1,79 @@
+;;(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\codice progetto.clp")
+
+;descriviamo la tipologia di tracce che possono essere rinvenute
+(deftemplate traccia-papillare
+	(slot tipologia (allowed-symbols evidente latente) (default ?NONE))
+	(slot numero-reperto (default ?NONE)))
+	
+(deftemplate traccia-biologica
+	(slot tipologia (allowed-symbols liquida solida) (default ?NONE))
+	(slot nome (default "sostanza sconosciuta"))
+	(slot numero-reperto (default ?NONE)))
+	
+(deftemplate traccia-merceologica
+	(slot tipologia (default ?NONE))
+	(slot nome (default "oggetto sconosciuto"))
+	(multislot tracce)
+	(slot numero-reperto (default ?NONE)))
+;;////////////////////////////////////////////////////////////////////////
+;;funzione atta a forzare l'utente a digitare le risposte previste
+(deffunction monitora-si-no (?risposta)
+	(bind ?risposta (lowcase ?risposta))
+	(while (and(neq ?risposta si)(neq ?risposta no)) do 
+	(printout t "La risposta inserita non è valida, è possibile digitare 'si' o 'no': ")
+	(bind ?risposta (read)))
+	(return ?risposta))
+
+;(deffunction rimuovi-da-lista (?lista ?elemento)
+	;(printout t "Rimozione di " ?elemento "da " ?lista)
+	;(bind ?posizione (member$ ?elemento ?lista))
+	;(delete$ ?lista ?posizione ?posizione)
+	;(printout t "Rimozione effettuata"))
+	
+(defrule stato-iniziale
+	(not(indumenti))
+	(not(finito))
+	=>
+	(printout t "Benvenuto operatore!" crlf)
+	(load-facts "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\fatti iniziali.clp"))
+;;///////////////////////	PREVENZIONE INQUINAMENTO PROVE	//////////////////////////////////////////////////
+(defrule chiedere-vestire
+	(declare (salience 100))
+	(finito no)
+	?indumenti<-(indumenti ?primo $?restanti)
+	=>
+	(printout t "Hai indossato " ?primo " ? (si/no): ")
+	(bind ?risposta (monitora-si-no (read)))
+	(assert (indumento-messo ?risposta))
+	(retract ?indumenti);ritrattare per poter tornare sulla stessa regola 
+	(if (eq ?risposta si) then (assert(indumenti $?restanti)) else (printout t "cosa stai aspettando?!") (assert (indumenti ?primo $?restanti))))
+	
+(defrule cerca-curiosi
+	(finito no)
+	(indumenti)
+	(not(curiosi))
+	=>
+	(printout t "Guardati intorno; ci sono persone  non autorizzate (curiosi, giornalisiti, etc.) che potrebbero inquinare le prove? [si/no]" crlf)
+	(assert (curiosi (monitora-si-no (read)))))
+(defrule curiosi-presenti
+	(finito no)
+	(indumenti)
+	(curiosi si)
+	(or(not (curiosi-allontanati)) (curiosi-allontanati no))
+	=>
+	(printout "Li hai allontanati? [si/no]")
+	(assert(curiosi-allontanati (monitora-si-no (read)))))
+
+(defrule allontana-curiosi
+	(finito no)
+	(indumenti)
+	(curiosi si)
+	(curiosi-allontanati no)
+	=>
+	(printout t "Non possiamo rischiare che la scena sia compromessa!"))
+	
+	
+	
+	
+	
+	

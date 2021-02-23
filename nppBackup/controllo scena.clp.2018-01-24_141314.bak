@@ -1,0 +1,40 @@
+(defmodule controllo-scena(export ?ALL))
+(import funzioni-globali ?ALL)
+(import prevenzione-inquinamento ?ALL) 
+(import MAIN deftemplate finito)
+
+;;//////////////////////	CONTROLLO AMBIENTE PRELIMINARE	//////////////////
+;;la priorità è assicurarsi che non ci siano feriti
+(defrule cerca-feriti
+	(finito no)
+	(indumenti)
+	(curiosi no)
+	(not(feriti))
+	(osservare si)
+	=>
+	(printout t "E' fonamentale assicurarsi che non ci siano feriti." crlf "Ce ne sono? [si/no]")
+	(assert (feriti funzioni-globali::monitora-si-no(read))))
+;;in presenza di feriti, è necessario coinvolgere gli operatori sanitari, così che mettano in sicurezza i feriti
+(defrule soccorso-feriti
+	(finito no)
+	(indumenti)
+	(curiosi no)
+	(feriti si)
+	=>
+	(printout t "E' necessario chiamare gli addetti ai soccorsi" crlf "I feriti sono stati soccorsi? [si/no]")
+	(if (eq funzioni-globali::monitora-si-no(read) si) then (assert (feriti no)) else (assert(feriti si))))
+	
+;;ora è necessario capire quali pericoli ci siano nell'ambiente per gli operatori, la cui sicurezza ora è al primo posto
+(defrule sopralluogo-ambiente
+	(finito no)
+	(indumenti)
+	(curiosi no)
+	(feriti no)
+	=>
+	(printout t "C'è rischio di tossicita'? [si/no]")													;;INSERIRE DELLE VOCI DI HELP!!
+	(assert (tossico funzioni-globali::monitora-si-no(read)))
+	(printout t "Ci sono rischi ambientali? (incendio, fughe di gas, etc.) [si/no]")
+	(assert (rischio-ambientale funzioni-globali::monitora-si-no(read)))
+	(printout t "La scena del crimine è al chiuso? [si/no]")
+	(assert (al-chiuso funzioni-globali::monitora-si-no(read))))
+	

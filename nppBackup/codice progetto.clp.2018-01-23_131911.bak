@@ -1,0 +1,37 @@
+;;(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\codice progetto.clp")
+
+(defmodule MAIN (import prevenzione-inquinamento ?ALL))
+
+;;////////////////////////////////////////////////////////////////////////
+;;funzione atta a forzare l'utente a digitare le risposte previste
+(deffunction MAIN::monitora-si-no (?risposta)
+	(bind ?risposta (lowcase ?risposta))
+	(while (and(neq ?risposta si)(neq ?risposta no)) do 
+	(printout t "La risposta inserita non è valida, è possibile digitare 'si' o 'no': ")
+	(bind ?risposta (read)))
+	(return ?risposta))
+
+;(deffunction rimuovi-da-lista (?lista ?elemento)
+	;(printout t "Rimozione di " ?elemento "da " ?lista)
+	;(bind ?posizione (member$ ?elemento ?lista))
+	;(delete$ ?lista ?posizione ?posizione)
+	;(printout t "Rimozione effettuata"))
+	
+(defrule MAIN::stato-iniziale
+	(not(indumenti))
+	(not(finito))
+	=>
+	(printout t "Benvenuto operatore!" crlf)
+	(load-facts "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\fatti iniziali.clp")
+	(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\prevenzione inquinamento.clp")
+(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\prevenzione tracce.clp")
+(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\prevenzione ricerca tracce.clp")
+	(focus prevenzione-inquinamento ricerca-tracce))
+;;///////////////////////	PREVENZIONE INQUINAMENTO PROVE	//////////////////////////////////////////////////
+
+	
+	
+	
+	
+	
+	

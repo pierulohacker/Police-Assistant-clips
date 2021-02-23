@@ -1,0 +1,31 @@
+;;(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\codice progetto.clp")
+
+;;////////////////////////////////////////////////////////////////////////
+(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\funzioni globali.clp")
+(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\prevenzione inquinamento.clp")
+(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\tracce.clp")
+(load "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\ricerca tracce.clp")
+(defmodule MAIN (import prevenzione-inquinamento ?ALL)
+(import funzioni-globali ?ALL))
+
+;(deffunction rimuovi-da-lista (?lista ?elemento)
+	;(printout t "Rimozione di " ?elemento "da " ?lista)
+	;(bind ?posizione (member$ ?elemento ?lista))
+	;(delete$ ?lista ?posizione ?posizione)
+	;(printout t "Rimozione effettuata"))
+	
+(defrule MAIN::stato-iniziale
+	(not(indumenti))
+	(not(finito))
+	=>
+	(printout t "Benvenuto operatore!" crlf)
+	(load-facts "D:\\UNIVERSITY\\anno 3\\I.C.S.E\\Lab\\progetto\\fatti iniziali.clp")
+	(focus prevenzione-inquinamento))
+;;///////////////////////	PREVENZIONE INQUINAMENTO PROVE	//////////////////////////////////////////////////
+
+	
+	
+	
+	
+	
+	
