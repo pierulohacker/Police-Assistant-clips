@@ -1,2 +1,0 @@
-(defmodule ricerca-tracce (export ?ALL))
-(import funzioni-globali ?ALL)
